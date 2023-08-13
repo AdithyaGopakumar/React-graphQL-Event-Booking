@@ -8,30 +8,49 @@ import {
   NavbarText,
   Row,
   Col,
+  Button,
 } from 'reactstrap';
+
+import AuthContext from '../context/auth.context';
+import { Link } from 'react-router-dom';
 
 const Header = (args) => {
   return (
-    <div>
-      <Navbar {...args} className='px-3' style={{"backgroundColor":"#0077f7"}}>
-        <NavbarBrand className='text-white'>My graphQL App</NavbarBrand>
-        <Nav className="me-auto" navbar>
-          <Row>
-            <Col>
-              <NavItem>
-                <NavLink href="/events" className='text-white'>Events</NavLink>
-              </NavItem>
-            </Col>
-            <Col>
-              <NavItem>
-                <NavLink href="/bookings" className='text-white'>Bookings</NavLink>
-              </NavItem>
-            </Col>
-          </Row>
-        </Nav>
-        <NavbarText className='text-white'>Event Booking App</NavbarText>
-      </Navbar>
-    </div>
+    <AuthContext.Consumer>
+      {(context) => (
+        <div>
+          {console.log(context.token, "context token")}
+          <Navbar {...args} className='px-3' style={{ "backgroundColor": "#0077f7" }}>
+            <NavbarBrand className='text-white'>My graphQL App</NavbarBrand>
+            <Nav className="me-auto" navbar>
+              <Row className='align-items-center'>
+                {!context.token &&
+                  <Col>
+                    <Link to="/auth" className='text-white text-decoration-none'>Authentication</Link>
+                  </Col>
+                }
+                <Col>
+                  <Link to="/events" className='text-white text-decoration-none'>Events</Link>
+                </Col>
+                {context.token &&
+                  <Col>
+                    <Link to="/bookings" className='text-white text-decoration-none'>Bookings</Link>
+                  </Col>
+                }
+                {context.token &&
+                  <Col>
+                    <Button className='text-white btn btn-warning text-decoration-none'
+                      onClick={context.logout}
+                    >Logout</Button>
+                  </Col>
+                }
+              </Row>
+            </Nav>
+            <NavbarText className='text-white'>Event Booking App</NavbarText>
+          </Navbar>
+        </div>
+      )}
+    </AuthContext.Consumer>
   );
 }
 
