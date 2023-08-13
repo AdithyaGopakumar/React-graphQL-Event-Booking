@@ -27,6 +27,7 @@ function Events() {
       query: `
       query{
         events{
+          _id
           title
           description
           price
@@ -51,7 +52,6 @@ function Events() {
       }
       return res.json()
     }).then((data) => {
-      console.warn(data)
       const eventsList = data.data.events
       setEventsList(eventsList)
     })
@@ -96,7 +96,6 @@ function Events() {
       }
       return res.json()
     }).then((data) => {
-      console.warn(data)
       fetchEvents()
     })
       .catch((err) => { console.log(err); })
@@ -116,7 +115,7 @@ function Events() {
   return (
     <div className='m-5'>
     { eventsList && <EventTable events={eventsList} />}
-      {context.token && <Button className='btn btn-info' onClick={toggleModal}>Create</Button>}
+      {context.token && <Button className='btn btn-info text-white' onClick={toggleModal}>Create</Button>}
 
       <Modal isOpen={modalOpen} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>Create Event</ModalHeader>

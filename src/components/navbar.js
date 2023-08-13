@@ -19,9 +19,8 @@ const Header = (args) => {
     <AuthContext.Consumer>
       {(context) => (
         <div>
-          {console.log(context.token, "context token")}
           <Navbar {...args} className='px-3' style={{ "backgroundColor": "#0077f7" }}>
-            <NavbarBrand className='text-white'>My graphQL App</NavbarBrand>
+            <NavbarBrand className='text-white'>MyGraphQLApp</NavbarBrand>
             <Nav className="me-auto" navbar>
               <Row className='align-items-center'>
                 {!context.token &&

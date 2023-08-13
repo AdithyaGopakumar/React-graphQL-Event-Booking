@@ -12,7 +12,6 @@ const App = () => {
 
   const [token, setToken] = useState(null)
   const [userId, setUserId] = useState(null)
-  console.warn({ token, userId })
 
   const login = (token, user_id, tokenExpiration) => {
     setToken(token)

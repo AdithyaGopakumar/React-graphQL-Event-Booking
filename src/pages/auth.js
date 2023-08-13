@@ -20,7 +20,6 @@ const LoginForm = () => {
   const handleSwitchLogin =()=>{
     setIsLogin(!isLogin)
   }
-  console.warn({isLogin})
 
 let requestBody;
 if(!isLogin){
