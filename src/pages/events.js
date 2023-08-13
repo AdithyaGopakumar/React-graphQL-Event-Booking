@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input } from 'reactstrap';
 import AuthContext from '../context/auth.context';
 import EventTable from './eventsTable';
+import EventBookingModal from './confirmBookingModal';
 
 function Events() {
   const context = useContext(AuthContext)
@@ -141,6 +142,7 @@ function Events() {
           </Form>
         </ModalBody>
       </Modal>
+      
     </div>
   );
 }

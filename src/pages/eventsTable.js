@@ -1,11 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import AuthContext from '../context/auth.context';
 import { Button } from 'reactstrap';
+import EventBookingModal from './confirmBookingModal';
 
-const EventTable = ({ events }) => {
+const EventTable = ({ events}) => {
   const context = useContext(AuthContext)
-  console.warn({ context })
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [selectedEventID, setSelectedEventID] = useState("");
+
+  const toggleBookingModal = () => {
+    setBookingModalOpen(!bookingModalOpen);
+  };
+
 
   const columns = [
     {
@@ -38,14 +45,16 @@ const EventTable = ({ events }) => {
         context.user_id === row.creator._id ? (
           <span>Your Event</span>
         ) : (
-          <Button onClick={() => printId(row.creator._id)} className='btn btn-info text-white'>Book</Button>
+          <Button onClick={() => setModal(row._id)} className='btn btn-info text-white'>Book</Button>
         )
       ),
     });
   }
 
-  const printId = (id) => {
-    console.log(id, "this is the user id");
+  const setModal = (id) => {
+    console.log(id, "this is the event id");
+    setSelectedEventID(id)
+    setBookingModalOpen(true)
   }
 
   return (
@@ -56,6 +65,7 @@ const EventTable = ({ events }) => {
         data={events}
         pagination
       />
+      <EventBookingModal toggleModal={toggleBookingModal} modalOpen={bookingModalOpen} event_id={selectedEventID}/>
     </div>
   );
 };
