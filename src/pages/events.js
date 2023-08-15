@@ -15,15 +15,15 @@ function Events() {
     date: '',
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchEvents()
-  },[])
+  }, [])
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
 
-  const fetchEvents =()=>{
+  const fetchEvents = () => {
     const requestBody = {
       query: `
       query{
@@ -70,8 +70,8 @@ function Events() {
 
     const requestBody = {
       query: `
-      mutation{
-        createEvent(eventInput: {title : "${formData.title}", description : "${formData.description}", price : "${Number(formData.price)}", date : "${formData.date}"}){
+      mutation CreateEvent($title : String!, $description : String!, $price : String!, $date : String!){
+        createEvent(eventInput: {title : $title, description : $description, price : $price, date : $date}){
           title
           description
           price
@@ -82,7 +82,13 @@ function Events() {
           }
         }
       }
-    `
+    `,
+      variables: {
+        title: formData.title,
+        description: formData.description,
+        price: Number(formData.price),
+        date: formData.date
+      }
     }
     fetch("http://localhost:5000/graphql", {
       method: "POST",
@@ -112,10 +118,10 @@ function Events() {
     }));
   };
 
-  
+
   return (
     <div className='m-5'>
-    { eventsList && <EventTable events={eventsList} />}
+      {eventsList && <EventTable events={eventsList} />}
       {context.token && <Button className='btn btn-info text-white' onClick={toggleModal}>Create</Button>}
 
       <Modal isOpen={modalOpen} toggle={toggleModal}>
@@ -142,7 +148,7 @@ function Events() {
           </Form>
         </ModalBody>
       </Modal>
-      
+
     </div>
   );
 }

@@ -56,18 +56,22 @@ const Booking = () => {
       .catch((err) => { console.log(err); })
   }
 
-  const deleteBooking = (id) => {
+  const deleteBooking = (booking_id) => {
     const requestBody = {
       query: `
-      mutation{
-        cancelBooking( booking_id : "${id}"){
+      mutation CancelBooking($id:ID!){
+        cancelBooking( booking_id : $id){
           event{
             title
           }
           message
         }
       }
-    `
+    `,
+      variables: {
+        id: booking_id
+      }
+
     }
     fetch("http://localhost:5000/graphql", {
       method: "POST",
@@ -124,12 +128,12 @@ const Booking = () => {
         data={bookingsList}
         pagination
       />
-       <Modal isOpen={isModal} toggle={toggleModal}>
+      <Modal isOpen={isModal} toggle={toggleModal}>
         <ModalBody>
           Are you sure you want to cancel this booking?
         </ModalBody>
         <div className="modal-footer">
-          <Button color="secondary" onClick={()=>toggleModal()}>
+          <Button color="secondary" onClick={() => toggleModal()}>
             Cancel
           </Button>
           <Button color="danger" onClick={() => deleteBooking(selectedBookingID)}>

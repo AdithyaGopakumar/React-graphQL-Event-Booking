@@ -3,14 +3,14 @@ import { Modal, ModalBody, Button } from 'reactstrap';
 import AuthContext from '../context/auth.context';
 
 const EventBookingModal = ({ event_id, modalOpen, toggleModal }) => {
-  
+
   const context = useContext(AuthContext)
 
   const handleConfirmBooking = () => {
     const requestBody = {
       query: `
-      mutation{
-        bookEvent(event_id:"${event_id}"){
+      mutation ConfirmBooking($id : ID!){
+        bookEvent(event_id : $id){
           _id
           event_id{
             title
@@ -20,7 +20,10 @@ const EventBookingModal = ({ event_id, modalOpen, toggleModal }) => {
           }
         }
       }
-    `
+    `,
+      variable: {
+        id: event_id
+      }
     }
     fetch("http://localhost:5000/graphql", {
       method: "POST",

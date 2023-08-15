@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, FormGroup, Label, Input, Button, CardBody, Card } from 'reactstrap';
 import fetchAPI from '../helpers/fetchAPI';
 import AuthContext from '../context/auth.context';
@@ -17,65 +17,73 @@ const LoginForm = () => {
     setPassword(event.target.value);
   };
 
-  const handleSwitchLogin =()=>{
+  const handleSwitchLogin = () => {
     setIsLogin(!isLogin)
   }
 
-let requestBody;
-if(!isLogin){
-  requestBody = {
-    query : `
-      mutation{
-        createUser(userInput: {email : "${email}", password : "${password}" }){
+  let requestBody;
+  if (!isLogin) {
+    requestBody = {
+      query: `
+      mutation Signup($email : String!, $password : String!){
+        createUser(userInput: {email : $email, password : $password }){
           _id
           email
         }
       }
-    `
-  }
-}else{
-  requestBody ={
-    query : `
-      query{
-        login(email: "${email}", password: "${password}"){
+    `,
+    variable:{
+      email,
+      password
+    }
+    }
+  } else {
+    requestBody = {
+      query: `
+      query Login($email : String!, $password : String!){
+        login(email: $email, password: $password){
           user_id
           token
           tokenExpiration
         }
       }
-    `
+    `,
+    variables:{
+      email,
+      password
+    }
+    }
   }
-}
- 
-const handleSubmit = async(event) => {
-  event.preventDefault();
-  if (email.trim().length === 0 || password.trim().length === 0) {
-    return
-   }
-   fetch("http://localhost:5000/graphql", {
-    method: "POST",
-    body: JSON.stringify(requestBody),
-    headers: {
-      "Content-Type":"application/json"
-    },
-  }).then((res)=>{
-    if(res.status !== 200 && res.status !== 200){
-      throw new Error("Failed")
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (email.trim().length === 0 || password.trim().length === 0) {
+      return
     }
-    return res.json()
-  }).then((data)=>{
-    if(data.data.login.token){
-      context.login(data.data.login.token,data.data.login.user_id,data.data.login.tokenExpiration)
-    }
-  })
-  .catch((err)=>{console.log(err);})
-};
+    fetch("http://localhost:5000/graphql", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json"
+      },
+    }).then((res) => {
+      if (res.status !== 200 && res.status !== 200) {
+        throw new Error("Failed")
+      }
+      return res.json()
+    }).then((data) => {
+      if (data.data.login.token) {
+        context.login(data.data.login.token, data.data.login.user_id, data.data.login.tokenExpiration)
+      }
+    })
+      .catch((err) => { console.log(err); })
+  };
 
   return (
     <>
       <div className="d-flex align-items-center justify-content-center mt-5">
         <Form onSubmit={handleSubmit} className="w-50">
-          <h4>{!isLogin?"Signup":"Login"}</h4>
+          <h4>{!isLogin ? "Signup" : "Login"}</h4>
           <Card className="w-100">
             <CardBody className="w-100">
               <FormGroup className="w-100">
@@ -98,13 +106,13 @@ const handleSubmit = async(event) => {
                   onChange={handlePasswordChange}
                 />
               </FormGroup>
-              <Button color="primary">{!isLogin?"Signup":"Login"}</Button>
+              <Button color="primary">{!isLogin ? "Signup" : "Login"}</Button>
             </CardBody>
           </Card>
         </Form>
       </div>
       <div className="d-flex align-items-center justify-content-center mt-5">
-        <Button color="primary" onClick={()=>{handleSwitchLogin()}}>Switch to {isLogin?"Signup":"Login"}</Button>
+        <Button color="primary" onClick={() => { handleSwitchLogin() }}>Switch to {isLogin ? "Signup" : "Login"}</Button>
       </div>
     </>
   );
