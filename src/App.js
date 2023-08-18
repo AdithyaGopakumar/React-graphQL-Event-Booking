@@ -7,7 +7,6 @@ import Header from "./components/navbar";
 import AuthContext from "./context/auth.context";
 import { useState } from "react";
 
-
 const App = () => {
 
   const [token, setToken] = useState(null)
